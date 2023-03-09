@@ -9,26 +9,24 @@ using System.Threading.Tasks;
 
 namespace robert_baxter_c969.Data
 {
-    public class DataReader : IDataReader
+    public class DataRepository : IDataRepository
     {
         private string _connectionString;
-        private TableConfiguration _tableConfiguration;
 
-        public DataReader(TableConfiguration tableConfiguration)
+        public DataRepository()
         {
-            _connectionString = ConfigurationManager.AppSettings["ConnectionString"];
-            _tableConfiguration = tableConfiguration;
+            _connectionString = ConfigurationManager.ConnectionStrings["c969-db-connection"].ConnectionString;
         }
 
-        public async Task Delete(int id)
+        public async Task Delete<TDataEntity>(TDataEntity entity) where TDataEntity : DataEntity, new()
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
-                var deleteStatement = GetDeleteStatement();
+                var deleteStatement = GetDeleteStatement(typeof(TDataEntity).Name);
                 var command = connection.CreateCommand();
 
                 command.CommandText = deleteStatement;
-                command.Parameters.AddWithValue("@Id", id);
+                command.Parameters.AddWithValue("@Id", entity.Id);
 
                 await command.ExecuteNonQueryAsync();
             }
@@ -39,7 +37,7 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
-                var selectStatement = GetSelectStatement(searchCriteria.Select(criterion => criterion.Key));
+                var selectStatement = GetSelectStatement(searchCriteria.Select(criterion => criterion.Key), typeof(TDataEntity).Name);
                 var query = connection.CreateCommand();
                 query.CommandText = selectStatement;
 
@@ -66,7 +64,7 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
-                var selectStatement = GetSelectStatement(new List<string> { "Id" });
+                var selectStatement = GetSelectStatement(new List<string> { "Id" }, typeof(TDataEntity).Name);
                 var query = connection.CreateCommand();
                 query.CommandText = selectStatement;
 
@@ -87,7 +85,7 @@ namespace robert_baxter_c969.Data
             using (var connection = new MySqlConnection(_connectionString))
             {
                 var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id");
-                var insertStatement = GetInsertStatement(entity.GetType().GetProperties().Where(prop => prop.Name != "Id"));
+                var insertStatement = GetInsertStatement(entity.GetType().GetProperties().Where(prop => prop.Name != "Id"), entity.GetType().Name);
                 var command = connection.CreateCommand();
                 command.CommandText = insertStatement;
 
@@ -104,9 +102,9 @@ namespace robert_baxter_c969.Data
             }
         }
 
-        private string GetInsertStatement(IEnumerable<PropertyInfo> props) 
+        private string GetInsertStatement(IEnumerable<PropertyInfo> props, string tableName) 
         {
-            var builder = new StringBuilder($"INSERT INTO {_tableConfiguration.TableName}");
+            var builder = new StringBuilder($"INSERT INTO {tableName}");
             var columns = $" ({string.Join(",", props.Select(p => p.Name))})";
             var values = $" ({string.Join(",", props.Select(p => $"@{p.Name}"))})";
 
@@ -123,7 +121,7 @@ namespace robert_baxter_c969.Data
             using (var connection = new MySqlConnection(_connectionString))
             {
                 var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id");
-                var updateStatement = GetUpdateStatement(entityProps);
+                var updateStatement = GetUpdateStatement(entityProps, entity.GetType().Name);
                 var updateCommand = connection.CreateCommand();
                 updateCommand.CommandText = updateStatement;
 
@@ -138,18 +136,18 @@ namespace robert_baxter_c969.Data
             }
         }
 
-        private string GetUpdateStatement(IEnumerable<PropertyInfo> entityProps)
+        private string GetUpdateStatement(IEnumerable<PropertyInfo> entityProps, string tableName)
         {
-            var builder = new StringBuilder($"UPDATE {_tableConfiguration.TableName} SET ");
+            var builder = new StringBuilder($"UPDATE {tableName} SET ");
             builder.Append(string.Join(",", entityProps.Select(prop => $"{prop.Name}=@{prop.Name}")));
             builder.Append(" WHERE Id = @Id");
 
             return builder.ToString();
         }
 
-        private string GetSelectStatement(IEnumerable<string> searchCriteria)
+        private string GetSelectStatement(IEnumerable<string> searchCriteria, string tableName)
         {
-            var builder = new StringBuilder($"SELECT * FROM {_tableConfiguration.TableName}");
+            var builder = new StringBuilder($"SELECT * FROM {tableName}");
 
             if (searchCriteria?.Any() ?? false)
             {
@@ -161,9 +159,9 @@ namespace robert_baxter_c969.Data
             return builder.ToString();
         }
 
-        private string GetDeleteStatement()
+        private string GetDeleteStatement(string tableName)
         {
-            return $"DELETE FROM {_tableConfiguration.TableName} WHERE ID = @Id";
+            return $"DELETE FROM {tableName} WHERE ID = @Id";
         }
 
         private static TDataEntity MapEntity<TDataEntity>(DbDataReader reader) where TDataEntity : DataEntity, new()

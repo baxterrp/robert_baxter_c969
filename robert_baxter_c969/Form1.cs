@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using robert_baxter_c969.Data;
 using System.Windows.Forms;
 
 namespace robert_baxter_c969
@@ -15,6 +8,8 @@ namespace robert_baxter_c969
         public Form1()
         {
             InitializeComponent();
+
+            var reader = new DataRepository();
         }
     }
 }
