@@ -135,7 +135,8 @@ namespace robert_baxter_c969.Data
 
         public async Task<IEnumerable<TAggregateDataEntity>> ExecuteCustomQuery<TAggregateDataEntity>(
             string sql,
-            IDictionary<string, object> parameters)where TAggregateDataEntity : new()
+            IDictionary<string, object> parameters)
+            where TAggregateDataEntity : new()
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
