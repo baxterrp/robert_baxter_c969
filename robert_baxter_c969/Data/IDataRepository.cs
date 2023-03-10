@@ -11,5 +11,7 @@ namespace robert_baxter_c969.Data
             where TDataEntity : DataEntity, new();
         Task<TDataEntity> GetById<TDataEntity>(int id) where TDataEntity : DataEntity, new();
         Task Delete<TDataEntity>(TDataEntity entity) where TDataEntity : DataEntity, new();
+        Task<IEnumerable<TAggregateDataEntity>> ExecuteCustomQuery<TAggregateDataEntity>(string sql, IDictionary<string, object> parameters)
+            where TAggregateDataEntity : new();
     }
 }

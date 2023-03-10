@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using robert_baxter_c969.Configuration;
 using System;
 using System.Collections.Generic;
@@ -14,19 +13,16 @@ namespace robert_baxter_c969.Data
     public class DataRepository : IDataRepository
     {
         private DbConfiguration _connectionConfig;
-        private readonly ILogger<DataRepository> _logger;
 
-        public DataRepository(DbConfiguration connectionConfig, ILogger<DataRepository> logger)
+        public DataRepository(DbConfiguration connectionConfig)
         {
             _connectionConfig = connectionConfig;
-            _logger = logger;
         }
 
         public async Task Delete<TDataEntity>(TDataEntity entity) where TDataEntity : DataEntity, new()
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
-                await connection.OpenAsync();
 
                 var tableName = typeof(TDataEntity).Name;
                 var deleteStatement = GetDeleteStatement(tableName);
@@ -35,8 +31,7 @@ namespace robert_baxter_c969.Data
                 command.CommandText = deleteStatement;
                 command.Parameters.AddWithValue("@Id", entity.Id);
 
-                _logger.LogInformation("Deleting {tableName} with id {id}", tableName, entity.Id);
-
+                await connection.OpenAsync();
                 await command.ExecuteNonQueryAsync();
             }
         }
@@ -46,8 +41,6 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
-                await connection.OpenAsync();
-
                 var selectStatement = GetSelectStatement(searchCriteria?.Select(criterion => criterion.Key) ?? new List<string>(), typeof(TDataEntity).Name);
                 var query = connection.CreateCommand();
                 query.CommandText = selectStatement;
@@ -59,6 +52,7 @@ namespace robert_baxter_c969.Data
 
                 var result = new List<TDataEntity>();
 
+                await connection.OpenAsync();
                 using (var reader = await query.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
@@ -75,13 +69,12 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
-                await connection.OpenAsync();
-
                 var selectStatement = GetSelectStatement(new List<string> { "Id" }, typeof(TDataEntity).Name);
                 var query = connection.CreateCommand();
                 query.CommandText = selectStatement;
                 query.Parameters.AddWithValue("@Id", id);
 
+                await connection.OpenAsync();
                 using (var reader = await query.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
@@ -98,10 +91,8 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
-                await connection.OpenAsync();
-
                 var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id");
-                var insertStatement = GetInsertStatement(entity.GetType().GetProperties().Where(prop => prop.Name != "Id"), entity.GetType().Name);
+                var insertStatement = GetInsertStatement(entityProps, entity.GetType().Name);
                 var command = connection.CreateCommand();
                 command.CommandText = insertStatement;
 
@@ -110,12 +101,12 @@ namespace robert_baxter_c969.Data
                     command.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity));
                 }
 
+                await connection.OpenAsync();
                 var newId = await command.ExecuteScalarAsync();
 
                 entity.Id = int.Parse(newId.ToString());
 
                 return entity;
-
             }
         }
 
@@ -123,8 +114,6 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
-                await connection.OpenAsync();
-
                 var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id");
                 var updateStatement = GetUpdateStatement(entityProps, entity.GetType().Name);
                 var updateCommand = connection.CreateCommand();
@@ -137,13 +126,40 @@ namespace robert_baxter_c969.Data
 
                 updateCommand.Parameters.AddWithValue("@Id", entity.Id);
 
+                await connection.OpenAsync();
                 await updateCommand.ExecuteNonQueryAsync();
 
                 return entity;
             }
         }
 
-        private string GetInsertStatement(IEnumerable<PropertyInfo> props, string tableName)
+        public async Task<IEnumerable<TAggregateDataEntity>> ExecuteCustomQuery<TAggregateDataEntity>(
+            string sql,
+            IDictionary<string, object> parameters)where TAggregateDataEntity : new()
+        {
+            using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = sql;
+
+                foreach (var param in parameters)
+                {
+                    command.Parameters.AddWithValue($"@{param.Key}", param.Value);
+                }
+
+                var result = new List<TAggregateDataEntity>();
+
+                await connection.OpenAsync();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    result.Add(MapEntity<TAggregateDataEntity>(reader));
+                }
+
+                return result;
+            }
+        }
+
+        private static string GetInsertStatement(IEnumerable<PropertyInfo> props, string tableName)
         {
             var builder = new StringBuilder($"INSERT INTO {tableName}");
             var columns = $" ({string.Join(",", props.Select(p => p.Name))})";
@@ -157,7 +173,7 @@ namespace robert_baxter_c969.Data
             return builder.ToString();
         }
 
-        private string GetUpdateStatement(IEnumerable<PropertyInfo> entityProps, string tableName)
+        private static string GetUpdateStatement(IEnumerable<PropertyInfo> entityProps, string tableName)
         {
             var builder = new StringBuilder($"UPDATE {tableName} SET ");
             builder.Append(string.Join(",", entityProps.Select(prop => $"{prop.Name}=@{prop.Name}")));
@@ -166,7 +182,7 @@ namespace robert_baxter_c969.Data
             return builder.ToString();
         }
 
-        private string GetSelectStatement(IEnumerable<string> searchCriteria, string tableName)
+        private static string GetSelectStatement(IEnumerable<string> searchCriteria, string tableName)
         {
             var builder = new StringBuilder($"SELECT * FROM {tableName}");
 
@@ -180,12 +196,12 @@ namespace robert_baxter_c969.Data
             return builder.ToString();
         }
 
-        private string GetDeleteStatement(string tableName)
+        private static string GetDeleteStatement(string tableName)
         {
             return $"DELETE FROM {tableName} WHERE ID = @Id";
         }
 
-        private static TDataEntity MapEntity<TDataEntity>(DbDataReader reader) where TDataEntity : DataEntity, new()
+        private static TDataEntity MapEntity<TDataEntity>(DbDataReader reader) where TDataEntity : new()
         {
             var entity = new TDataEntity();
 
