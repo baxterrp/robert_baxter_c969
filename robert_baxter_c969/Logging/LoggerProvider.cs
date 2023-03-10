@@ -6,7 +6,7 @@ namespace robert_baxter_c969.Logging
     {
         public ILogger CreateLogger(string categoryName)
         {
-            return new Logger();
+            return new Logger(categoryName);
         }
 
         public void Dispose()

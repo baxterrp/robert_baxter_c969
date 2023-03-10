@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using robert_baxter_c969.Configuration;
 using robert_baxter_c969.Data;
 using robert_baxter_c969.DependencyInjection;
 using robert_baxter_c969.Logging;
@@ -21,20 +22,32 @@ namespace robert_baxter_c969
             Application.SetCompatibleTextRenderingDefault(false);
 
             var services = new ServiceCollection();
-            services.AddSingleton<IDataRepository>(
-                new DataRepository(ConfigurationManager.ConnectionStrings["c969-db-connection"].ConnectionString));
-            services.AddSingleton<IFormFactory, FormFactory>();
-            services.AddTransient<MainForm>();
-            services.AddSingleton<Logger>();
+            var connectionString = ConfigurationManager.ConnectionStrings["c969-db-connection"].ConnectionString;
+            var dbConfig = new DbConfiguration
+            {
+                ConnectionString = connectionString,
+            };
 
+            services.AddSingleton(dbConfig);
+            services.AddSingleton<IDataRepository, DataRepository>();
+
+            // use factory to provide all forms
+            services.AddSingleton<IFormFactory, FormFactory>();
+
+            // load all of the forms here as Transient
+            services.AddTransient<MainForm>();
+            
+            // configure custom logger to output to text files
+            services.AddTransient<Logger>();
             services.AddLogging();
 
             var serviceProvider = services.BuildServiceProvider();
+
+            // add custom logger provider
             serviceProvider.GetRequiredService<ILoggerFactory>().AddProvider(new LoggerProvider());
             
-            var mainForm = serviceProvider.GetRequiredService<MainForm>();
-
-            Application.Run(mainForm);
+            // load the main form and run
+            Application.Run(serviceProvider.GetRequiredService<MainForm>());
         }
     }
 }

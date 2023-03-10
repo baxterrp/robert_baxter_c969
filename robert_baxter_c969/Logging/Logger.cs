@@ -8,11 +8,13 @@ namespace robert_baxter_c969.Logging
     {
         private StreamWriter _streamWriter;
 
-        public Logger()
+        public Logger(string callerMember)
         {
-            // create files based on the day they were used
+            // a new log file will be created each day it is used
             var date = DateTime.UtcNow.ToShortDateString().Replace("/", "-");
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "Logging/Logs", $"{date}.txt");
+
+            // all logs will be output to the Logging/Logs folder but will not be added to the solution
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "Logging/Logs", $"{date}-{callerMember}.txt");
             _streamWriter = new StreamWriter(filePath, true);
         }
 

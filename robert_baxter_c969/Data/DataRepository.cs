@@ -1,6 +1,8 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.Extensions.Logging;
+using MySql.Data.MySqlClient;
+using robert_baxter_c969.Configuration;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
@@ -11,22 +13,29 @@ namespace robert_baxter_c969.Data
 {
     public class DataRepository : IDataRepository
     {
-        private string _connectionString;
+        private DbConfiguration _connectionConfig;
+        private readonly ILogger<DataRepository> _logger;
 
-        public DataRepository(string connectionString)
+        public DataRepository(DbConfiguration connectionConfig, ILogger<DataRepository> logger)
         {
-            _connectionString = connectionString;
+            _connectionConfig = connectionConfig;
+            _logger = logger;
         }
 
         public async Task Delete<TDataEntity>(TDataEntity entity) where TDataEntity : DataEntity, new()
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
-                var deleteStatement = GetDeleteStatement(typeof(TDataEntity).Name);
+                await connection.OpenAsync();
+
+                var tableName = typeof(TDataEntity).Name;
+                var deleteStatement = GetDeleteStatement(tableName);
                 var command = connection.CreateCommand();
 
                 command.CommandText = deleteStatement;
                 command.Parameters.AddWithValue("@Id", entity.Id);
+
+                _logger.LogInformation("Deleting {tableName} with id {id}", tableName, entity.Id);
 
                 await command.ExecuteNonQueryAsync();
             }
@@ -35,9 +44,11 @@ namespace robert_baxter_c969.Data
         public async Task<IEnumerable<TDataEntity>> Get<TDataEntity>(IDictionary<string, string> searchCriteria = null)
             where TDataEntity : DataEntity, new()
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
-                var selectStatement = GetSelectStatement(searchCriteria.Select(criterion => criterion.Key), typeof(TDataEntity).Name);
+                await connection.OpenAsync();
+
+                var selectStatement = GetSelectStatement(searchCriteria?.Select(criterion => criterion.Key) ?? new List<string>(), typeof(TDataEntity).Name);
                 var query = connection.CreateCommand();
                 query.CommandText = selectStatement;
 
@@ -62,11 +73,14 @@ namespace robert_baxter_c969.Data
 
         public async Task<TDataEntity> GetById<TDataEntity>(int id) where TDataEntity : DataEntity, new()
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
+                await connection.OpenAsync();
+
                 var selectStatement = GetSelectStatement(new List<string> { "Id" }, typeof(TDataEntity).Name);
                 var query = connection.CreateCommand();
                 query.CommandText = selectStatement;
+                query.Parameters.AddWithValue("@Id", id);
 
                 using (var reader = await query.ExecuteReaderAsync())
                 {
@@ -82,31 +96,58 @@ namespace robert_baxter_c969.Data
 
         public async Task<TDataEntity> Insert<TDataEntity>(TDataEntity entity) where TDataEntity : DataEntity, new()
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
+                await connection.OpenAsync();
+
                 var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id");
                 var insertStatement = GetInsertStatement(entity.GetType().GetProperties().Where(prop => prop.Name != "Id"), entity.GetType().Name);
                 var command = connection.CreateCommand();
                 command.CommandText = insertStatement;
 
-                foreach(var prop in entityProps)
+                foreach (var prop in entityProps)
                 {
                     command.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity));
                 }
 
-                var newId = await command.ExecuteScalarAsync() as int?;
+                var newId = await command.ExecuteScalarAsync();
 
-                entity.Id = newId.Value;
+                entity.Id = int.Parse(newId.ToString());
+
+                return entity;
+
+            }
+        }
+
+        public async Task<TDataEntity> Update<TDataEntity>(TDataEntity entity) where TDataEntity : DataEntity, new()
+        {
+            using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
+            {
+                await connection.OpenAsync();
+
+                var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id");
+                var updateStatement = GetUpdateStatement(entityProps, entity.GetType().Name);
+                var updateCommand = connection.CreateCommand();
+                updateCommand.CommandText = updateStatement;
+
+                foreach (var prop in entityProps)
+                {
+                    updateCommand.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity));
+                }
+
+                updateCommand.Parameters.AddWithValue("@Id", entity.Id);
+
+                await updateCommand.ExecuteNonQueryAsync();
 
                 return entity;
             }
         }
 
-        private string GetInsertStatement(IEnumerable<PropertyInfo> props, string tableName) 
+        private string GetInsertStatement(IEnumerable<PropertyInfo> props, string tableName)
         {
             var builder = new StringBuilder($"INSERT INTO {tableName}");
             var columns = $" ({string.Join(",", props.Select(p => p.Name))})";
-            var values = $" ({string.Join(",", props.Select(p => $"@{p.Name}"))})";
+            var values = $" ({string.Join(",", props.Select(p => $"@{p.Name}"))});";
 
             builder.Append(columns);
             builder.Append(" VALUES ");
@@ -114,26 +155,6 @@ namespace robert_baxter_c969.Data
             builder.Append(" SELECT LAST_INSERT_ID();");
 
             return builder.ToString();
-        }
-
-        public async Task<TDataEntity> Update<TDataEntity>(TDataEntity entity) where TDataEntity : DataEntity, new()
-        {
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id");
-                var updateStatement = GetUpdateStatement(entityProps, entity.GetType().Name);
-                var updateCommand = connection.CreateCommand();
-                updateCommand.CommandText = updateStatement;
-
-                foreach(var prop in entityProps)
-                {
-                    updateCommand.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity));
-                }
-
-                await updateCommand.ExecuteNonQueryAsync();
-
-                return entity;
-            }
         }
 
         private string GetUpdateStatement(IEnumerable<PropertyInfo> entityProps, string tableName)
@@ -173,7 +194,23 @@ namespace robert_baxter_c969.Data
                 var name = prop.Name;
                 var value = reader[name];
 
-                prop.SetValue(entity, value);
+                switch (value)
+                {
+                    case int intValue:
+                        prop.SetValue(entity, intValue);
+                        break;
+                    case string stringValue:
+                        prop.SetValue(entity, stringValue);
+                        break;
+                    case DateTime dateTimeValue:
+                        prop.SetValue(entity, dateTimeValue);
+                        break;
+
+                    // was getting a format exception converting the TINYINT value to boolean so i'm just comparing it to 0
+                    case sbyte booleanValue:
+                        prop.SetValue(entity, booleanValue > 0);
+                        break;
+                }
             }
 
             return entity;
