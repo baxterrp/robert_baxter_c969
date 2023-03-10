@@ -13,9 +13,9 @@ namespace robert_baxter_c969.Data
     {
         private string _connectionString;
 
-        public DataRepository()
+        public DataRepository(string connectionString)
         {
-            _connectionString = ConfigurationManager.ConnectionStrings["c969-db-connection"].ConnectionString;
+            _connectionString = connectionString;
         }
 
         public async Task Delete<TDataEntity>(TDataEntity entity) where TDataEntity : DataEntity, new()
