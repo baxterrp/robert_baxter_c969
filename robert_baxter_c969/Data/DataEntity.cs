@@ -1,20 +1,25 @@
-﻿using System;
+﻿using robert_baxter_c969.Configuration;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace robert_baxter_c969.Data
 {
     public abstract class DataEntity
     {
-        public int Id { get; set; }
+        public abstract int Id { get; set; }
 
+        [ColumnName("createDate")]
         public DateTime CreateDate { get; set; }
-
+        
+        [ColumnName("lastUpdate")]
         public DateTime LastUpdate { get; set; }
 
         [MaxLength(40)]
-        public string CreatedBy { get; set; }
+        [ColumnName("createBy")]
+        public string CreateBy { get; set; }
 
         [MaxLength(40)]
+        [ColumnName("lastUpdateBy")]
         public string LastUpdateBy { get; set; }
     }
 }

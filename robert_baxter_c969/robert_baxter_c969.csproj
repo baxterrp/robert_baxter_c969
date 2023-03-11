@@ -116,6 +116,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ColumnNameAttribute.cs" />
     <Compile Include="Configuration\DbConfiguration.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Data\DataEntity.cs" />

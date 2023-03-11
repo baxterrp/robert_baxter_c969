@@ -36,7 +36,6 @@ namespace robert_baxter_c969.Forms
                 };
 
                 var user = (await _dataRepository.Get<User>(criteria)).FirstOrDefault();
-
                 var passwordCorrect = _passwordText.Text.Equals(user?.Password ?? string.Empty);
 
                 if (passwordCorrect)
@@ -49,6 +48,9 @@ namespace robert_baxter_c969.Forms
 
                     // when the main form is closed, finally close this one
                     mainForm.FormClosed += (s, args) => Close();
+
+                    // set the user for life of app
+                    mainForm.LoggedInUser = user;
                     mainForm.Show();
                 }
                 else

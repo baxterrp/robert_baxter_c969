@@ -23,13 +23,12 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
-
                 var tableName = typeof(TDataEntity).Name.ToLower();
-                var deleteStatement = GetDeleteStatement(tableName);
+                var deleteStatement = GetDeleteStatement<TDataEntity>(tableName);
                 var command = connection.CreateCommand();
 
                 command.CommandText = deleteStatement;
-                command.Parameters.AddWithValue("@Id", entity.Id);
+                command.Parameters.AddWithValue($"@Id", entity.Id);
 
                 await connection.OpenAsync();
                 await command.ExecuteNonQueryAsync();
@@ -42,7 +41,7 @@ namespace robert_baxter_c969.Data
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
                 // use .Select here to fetch a new IEnumerable object of just the Key value provided in searchCriteria
-                var selectStatement = GetSelectStatement(searchCriteria?.Select(criterion => criterion.Key) ?? new List<string>(), typeof(TDataEntity).Name.ToLower());
+                var selectStatement = GetSelectStatement<TDataEntity>(searchCriteria?.Select(criterion => criterion.Key) ?? new List<string>(), typeof(TDataEntity).Name.ToLower());
                 var query = connection.CreateCommand();
                 query.CommandText = selectStatement;
 
@@ -70,7 +69,7 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
-                var selectStatement = GetSelectStatement(new List<string> { "Id" }, typeof(TDataEntity).Name.ToLower());
+                var selectStatement = GetSelectStatement<TDataEntity>(new List<string> { "Id" }, typeof(TDataEntity).Name.ToLower());
                 var query = connection.CreateCommand();
                 query.CommandText = selectStatement;
                 query.Parameters.AddWithValue("@Id", id);
@@ -94,7 +93,7 @@ namespace robert_baxter_c969.Data
             {
                 // use .Where here to fetch new IEnumerable object not containing the DataEntity.Id property
                 var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id");
-                var insertStatement = GetInsertStatement(entityProps, entity.GetType().Name);
+                var insertStatement = GetInsertStatement<TDataEntity>(entityProps, entity.GetType().Name);
                 var command = connection.CreateCommand();
                 command.CommandText = insertStatement;
 
@@ -118,7 +117,7 @@ namespace robert_baxter_c969.Data
             {
                 // use .Where here to fetch new IEnumerable object not containing the DataEntity.Id property
                 var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id");
-                var updateStatement = GetUpdateStatement(entityProps, entity.GetType().Name);
+                var updateStatement = GetUpdateStatement<TDataEntity>(entityProps, entity.GetType().Name);
                 var updateCommand = connection.CreateCommand();
                 updateCommand.CommandText = updateStatement;
 
@@ -163,10 +162,16 @@ namespace robert_baxter_c969.Data
             }
         }
 
-        private static string GetInsertStatement(IEnumerable<PropertyInfo> props, string tableName)
+        private static string GetColumnName<TDataEntity>(string propertyName)
+        {
+            return typeof(TDataEntity).GetProperty(propertyName)
+                .GetCustomAttribute<ColumnNameAttribute>().Column;
+        }
+
+        private static string GetInsertStatement<TDataEntity>(IEnumerable<PropertyInfo> props, string tableName)
         {
             var builder = new StringBuilder($"INSERT INTO {tableName}");
-            var columns = $" ({string.Join(",", props.Select(p => p.Name))})";
+            var columns = $" ({string.Join(",", props.Select(p => GetColumnName<TDataEntity>(p.Name)))})";
             var values = $" ({string.Join(",", props.Select(p => $"@{p.Name}"))});";
 
             builder.Append(columns);
@@ -177,16 +182,16 @@ namespace robert_baxter_c969.Data
             return builder.ToString();
         }
 
-        private static string GetUpdateStatement(IEnumerable<PropertyInfo> entityProps, string tableName)
+        private static string GetUpdateStatement<TDataEntity>(IEnumerable<PropertyInfo> entityProps, string tableName)
         {
             var builder = new StringBuilder($"UPDATE {tableName} SET ");
-            builder.Append(string.Join(",", entityProps.Select(prop => $"{prop.Name}=@{prop.Name}")));
-            builder.Append(" WHERE Id = @Id");
+            builder.Append(string.Join(",", entityProps.Select(prop => $"{GetColumnName<TDataEntity>(prop.Name)}=@{prop.Name}")));
+            builder.Append($" WHERE {GetColumnName<TDataEntity>("Id")} = @Id");
 
             return builder.ToString();
         }
 
-        private static string GetSelectStatement(IEnumerable<string> searchCriteria, string tableName)
+        private static string GetSelectStatement<TDataEntity>(IEnumerable<string> searchCriteria, string tableName)
         {
             var builder = new StringBuilder($"SELECT * FROM {tableName}");
 
@@ -194,15 +199,17 @@ namespace robert_baxter_c969.Data
             {
                 builder.Append(" WHERE ");
                 builder.Append(
-                    string.Join(" AND ", searchCriteria.Select(criterion => $"{criterion}=@{criterion}")));
+                    string.Join(
+                        " AND ",
+                        searchCriteria.Select(criterion => $"{GetColumnName<TDataEntity>(criterion)}=@{criterion}")));
             }
 
             return builder.ToString();
         }
 
-        private static string GetDeleteStatement(string tableName)
+        private static string GetDeleteStatement<TDataEntity>(string tableName)
         {
-            return $"DELETE FROM {tableName} WHERE ID = @Id";
+            return $"DELETE FROM {tableName} WHERE {GetColumnName<TDataEntity>("Id")} = @Id";
         }
 
         private static TDataEntity MapEntity<TDataEntity>(DbDataReader reader) where TDataEntity : new()
@@ -212,7 +219,8 @@ namespace robert_baxter_c969.Data
             foreach (var prop in entity.GetType().GetProperties())
             {
                 var name = prop.Name;
-                var value = reader[name];
+                var columName = GetColumnName<TDataEntity>(name);
+                var value = reader[columName];
 
                 switch (value)
                 {
