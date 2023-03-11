@@ -15,8 +15,8 @@ namespace robert_baxter_c969.Data
         public DateTime LastUpdate { get; set; }
 
         [MaxLength(40)]
-        [ColumnName("createBy")]
-        public string CreateBy { get; set; }
+        [ColumnName("createdBy")]
+        public string CreatedBy { get; set; }
 
         [MaxLength(40)]
         [ColumnName("lastUpdateBy")]
