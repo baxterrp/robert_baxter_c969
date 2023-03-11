@@ -24,7 +24,7 @@ namespace robert_baxter_c969.Data
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
 
-                var tableName = typeof(TDataEntity).Name;
+                var tableName = typeof(TDataEntity).Name.ToLower();
                 var deleteStatement = GetDeleteStatement(tableName);
                 var command = connection.CreateCommand();
 
@@ -41,7 +41,7 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
-                var selectStatement = GetSelectStatement(searchCriteria?.Select(criterion => criterion.Key) ?? new List<string>(), typeof(TDataEntity).Name);
+                var selectStatement = GetSelectStatement(searchCriteria?.Select(criterion => criterion.Key) ?? new List<string>(), typeof(TDataEntity).Name.ToLower());
                 var query = connection.CreateCommand();
                 query.CommandText = selectStatement;
 
@@ -69,7 +69,7 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
-                var selectStatement = GetSelectStatement(new List<string> { "Id" }, typeof(TDataEntity).Name);
+                var selectStatement = GetSelectStatement(new List<string> { "Id" }, typeof(TDataEntity).Name.ToLower());
                 var query = connection.CreateCommand();
                 query.CommandText = selectStatement;
                 query.Parameters.AddWithValue("@Id", id);

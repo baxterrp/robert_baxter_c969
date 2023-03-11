@@ -117,12 +117,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\DbConfiguration.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Data\DataEntity.cs" />
     <Compile Include="Data\DataRepository.cs" />
     <Compile Include="Data\IDataRepository.cs" />
+    <Compile Include="Data\Models\User.cs" />
     <Compile Include="Data\TableConfiguration.cs" />
     <Compile Include="DependencyInjection\FormFactory.cs" />
     <Compile Include="DependencyInjection\IFormFactory.cs" />
+    <Compile Include="Forms\BaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Login.Designer.cs">
+      <DependentUpon>Login.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logging\LoggerProvider.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="MainForm.cs">
@@ -133,6 +144,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\Login.resx">
+      <DependentUpon>Login.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -160,8 +174,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\Models\" />
     <Folder Include="Logging\Logs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SqlScripts\UserName.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

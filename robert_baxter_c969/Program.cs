@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using robert_baxter_c969.Configuration;
 using robert_baxter_c969.Data;
 using robert_baxter_c969.DependencyInjection;
+using robert_baxter_c969.Forms;
 using robert_baxter_c969.Logging;
 using System;
 using System.Configuration;
@@ -34,8 +35,9 @@ namespace robert_baxter_c969
             // use factory to provide all forms
             services.AddSingleton<IFormFactory, FormFactory>();
 
-            // load all of the forms here as Transient
-            services.AddTransient<MainForm>();
+            // load all of the forms here
+            services.AddTransient<Login>();
+            services.AddSingleton<MainForm>();
             
             // configure custom logger to output to text files
             services.AddTransient<Logger>();
@@ -47,7 +49,7 @@ namespace robert_baxter_c969
             serviceProvider.GetRequiredService<ILoggerFactory>().AddProvider(new LoggerProvider());
             
             // load the main form and run
-            Application.Run(serviceProvider.GetRequiredService<MainForm>());
+            Application.Run(serviceProvider.GetRequiredService<Login>());
         }
     }
 }

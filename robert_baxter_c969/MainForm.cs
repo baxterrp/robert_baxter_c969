@@ -1,22 +1,18 @@
 ﻿using Microsoft.Extensions.Logging;
 using robert_baxter_c969.Data;
 using robert_baxter_c969.DependencyInjection;
-using System.Windows.Forms;
+using robert_baxter_c969.Forms;
 
 namespace robert_baxter_c969
 {
-    public partial class MainForm : Form
+    public partial class MainForm : BaseForm<MainForm>
     {
-        private readonly IDataRepository _dataRepository;
-        private readonly IFormFactory _formFactory;
-        private readonly ILogger<MainForm> _logger;
-
-        public MainForm(IFormFactory formFactory, ILogger<MainForm> logger, IDataRepository dataRepository)
+        public MainForm(
+            IFormFactory formFactory,
+            ILogger<MainForm> logger,
+            IDataRepository dataRepository): base(logger, dataRepository, formFactory)
         {
             InitializeComponent();
-            _formFactory = formFactory;
-            _logger = logger;
-            _dataRepository = dataRepository;
         }
     }
 }
