@@ -37,10 +37,10 @@ namespace robert_baxter_c969.Logging
             Func<TState, Exception, string> formatter)
         {
             // Format message for log 
-            // Example: [Friday, March 10, 2023 : 1:50:29 AM UTC] this is working
-            var dateSection = $"[{DateTime.UtcNow.ToLongDateString()} {DateTime.UtcNow.ToLongTimeString()} UTC]";
-            var logMessage =$"{dateSection} {formatter(state, exception)}";
-            
+            // Example: [Information][Friday, March 10, 2023 : 1:50:29 AM UTC] this is working
+            var dateSection = $"[{logLevel}][{DateTime.UtcNow.ToLongDateString()} {DateTime.UtcNow.ToLongTimeString()} UTC]";
+            var logMessage = $"{dateSection} {formatter(state, exception)}";
+
             _streamWriter.WriteLine(logMessage);
             _streamWriter.Flush();
         }

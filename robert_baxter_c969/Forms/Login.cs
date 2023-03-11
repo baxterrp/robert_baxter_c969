@@ -43,9 +43,13 @@ namespace robert_baxter_c969.Forms
                 {
                     _logger.LogInformation("Successful login attempt by {name}", _userNameText.Text);
                     var mainForm = _formFactory.CreateForm<MainForm>();
+
+                    // only hide to not close app
+                    this.Hide();
+
+                    // when the main form is closed, finally close this one
                     mainForm.FormClosed += (s, args) => Close();
                     mainForm.Show();
-                    this.Hide();
                 }
                 else
                 {

@@ -41,6 +41,7 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
+                // use .Select here to fetch a new IEnumerable object of just the Key value provided in searchCriteria
                 var selectStatement = GetSelectStatement(searchCriteria?.Select(criterion => criterion.Key) ?? new List<string>(), typeof(TDataEntity).Name.ToLower());
                 var query = connection.CreateCommand();
                 query.CommandText = selectStatement;
@@ -91,6 +92,7 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
+                // use .Where here to fetch new IEnumerable object not containing the DataEntity.Id property
                 var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id");
                 var insertStatement = GetInsertStatement(entityProps, entity.GetType().Name);
                 var command = connection.CreateCommand();
@@ -114,6 +116,7 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
+                // use .Where here to fetch new IEnumerable object not containing the DataEntity.Id property
                 var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id");
                 var updateStatement = GetUpdateStatement(entityProps, entity.GetType().Name);
                 var updateCommand = connection.CreateCommand();

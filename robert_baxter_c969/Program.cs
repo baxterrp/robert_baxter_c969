@@ -36,7 +36,7 @@ namespace robert_baxter_c969
             services.AddSingleton<IFormFactory, FormFactory>();
 
             // load all of the forms here
-            services.AddTransient<Login>();
+            services.AddSingleton<Login>();
             services.AddSingleton<MainForm>();
             
             // configure custom logger to output to text files
@@ -48,7 +48,7 @@ namespace robert_baxter_c969
             // add custom logger provider
             serviceProvider.GetRequiredService<ILoggerFactory>().AddProvider(new LoggerProvider());
             
-            // load the main form and run
+            // load the login form and run
             Application.Run(serviceProvider.GetRequiredService<Login>());
         }
     }
