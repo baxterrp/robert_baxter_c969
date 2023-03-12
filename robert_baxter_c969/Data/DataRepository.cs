@@ -12,7 +12,7 @@ namespace robert_baxter_c969.Data
 {
     public class DataRepository : IDataRepository
     {
-        private DbConfiguration _connectionConfig;
+        private readonly DbConfiguration _connectionConfig;
 
         public DataRepository(DbConfiguration connectionConfig)
         {

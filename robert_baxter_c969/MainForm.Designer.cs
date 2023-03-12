@@ -41,16 +41,15 @@
             // CustomerDisplay
             // 
             this.CustomerDisplay.AllowUserToAddRows = false;
-            this.CustomerDisplay.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.CustomerDisplay.Location = new System.Drawing.Point(33, 36);
-            this.CustomerDisplay.Name = "CustomerDisplay";
-            this.CustomerDisplay.Size = new System.Drawing.Size(1011, 239);
-            this.CustomerDisplay.TabIndex = 0;
-            this.CustomerDisplay.MultiSelect = false;
-            this.CustomerDisplay.ReadOnly = true;
             this.CustomerDisplay.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.CustomerDisplay.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.CustomerDisplay.Location = new System.Drawing.Point(33, 36);
+            this.CustomerDisplay.MultiSelect = false;
+            this.CustomerDisplay.Name = "CustomerDisplay";
+            this.CustomerDisplay.ReadOnly = true;
             this.CustomerDisplay.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.CustomerDisplay.Size = new System.Drawing.Size(867, 239);
+            this.CustomerDisplay.TabIndex = 0;
             // 
             // label1
             // 
@@ -64,7 +63,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1050, 36);
+            this.button1.Location = new System.Drawing.Point(906, 36);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(133, 43);
             this.button1.TabIndex = 2;
@@ -73,7 +72,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1050, 85);
+            this.button2.Location = new System.Drawing.Point(906, 85);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(133, 43);
             this.button2.TabIndex = 3;
@@ -82,7 +81,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(1050, 134);
+            this.button3.Location = new System.Drawing.Point(906, 134);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(133, 43);
             this.button3.TabIndex = 4;
@@ -91,7 +90,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(911, 291);
+            this.button4.Location = new System.Drawing.Point(767, 281);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(133, 43);
             this.button4.TabIndex = 5;
@@ -100,7 +99,7 @@
             // 
             // ExitButton
             // 
-            this.ExitButton.Location = new System.Drawing.Point(1050, 291);
+            this.ExitButton.Location = new System.Drawing.Point(906, 281);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(133, 43);
             this.ExitButton.TabIndex = 6;
@@ -112,7 +111,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1205, 351);
+            this.ClientSize = new System.Drawing.Size(1048, 330);
             this.Controls.Add(this.ExitButton);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
