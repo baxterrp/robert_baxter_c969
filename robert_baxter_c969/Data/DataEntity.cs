@@ -9,7 +9,7 @@ namespace robert_baxter_c969.Data
         public abstract int Id { get; set; }
 
         [ColumnName("createDate")]
-        public DateTime CreateDate { get; set; }
+        public DateTime? CreateDate { get; set; }
         
         [ColumnName("lastUpdate")]
         public DateTime LastUpdate { get; set; }

@@ -91,8 +91,11 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
+                // update audit data
+                SetDataEntityValues(entity);
+
                 // use .Where here to fetch new IEnumerable object not containing the DataEntity.Id property
-                var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id");
+                var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id" && prop.GetCustomAttribute<ColumnNameAttribute>() != null);
                 var insertStatement = GetInsertStatement<TDataEntity>(entityProps, entity.GetType().Name);
                 var command = connection.CreateCommand();
                 command.CommandText = insertStatement;
@@ -115,8 +118,11 @@ namespace robert_baxter_c969.Data
         {
             using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
             {
+                // update audit data
+                SetDataEntityValues(entity);
+
                 // use .Where here to fetch new IEnumerable object not containing the DataEntity.Id property
-                var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id");
+                var entityProps = entity.GetType().GetProperties().Where(prop => prop.Name != "Id" && prop.GetCustomAttribute<ColumnNameAttribute>() != null);
                 var updateStatement = GetUpdateStatement<TDataEntity>(entityProps, entity.GetType().Name);
                 var updateCommand = connection.CreateCommand();
                 updateCommand.CommandText = updateStatement;
@@ -145,7 +151,7 @@ namespace robert_baxter_c969.Data
                 var command = connection.CreateCommand();
                 command.CommandText = sql;
 
-                foreach (var param in parameters)
+                foreach (var param in parameters ?? new Dictionary<string, object>())
                 {
                     command.Parameters.AddWithValue($"@{param.Key}", param.Value);
                 }
@@ -155,11 +161,25 @@ namespace robert_baxter_c969.Data
                 await connection.OpenAsync();
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    result.Add(MapEntity<TAggregateDataEntity>(reader));
+                    while (reader.Read())
+                    {
+                        result.Add(MapEntity<TAggregateDataEntity>(reader));
+                    }
                 }
 
                 return result;
             }
+        }
+
+        private static void SetDataEntityValues<TDataEntity>(TDataEntity dataEntity) where TDataEntity : DataEntity
+        {
+            // don't update created by values if already set
+            dataEntity.CreateDate = dataEntity.CreateDate == null ? DateTime.UtcNow : dataEntity.CreateDate;
+            dataEntity.CreatedBy = string.IsNullOrWhiteSpace(dataEntity.CreatedBy) ? Constants.SystemName : dataEntity.CreatedBy;
+
+            // always update the updated by values
+            dataEntity.LastUpdateBy = Constants.SystemName;
+            dataEntity.LastUpdate = DateTime.UtcNow;
         }
 
         private static string GetColumnName<TDataEntity>(string propertyName)
@@ -216,7 +236,7 @@ namespace robert_baxter_c969.Data
         {
             var entity = new TDataEntity();
 
-            foreach (var prop in entity.GetType().GetProperties())
+            foreach (var prop in entity.GetType().GetProperties().Where(prop => prop.GetCustomAttribute<ColumnNameAttribute>() != null))
             {
                 var name = prop.Name;
                 var columName = GetColumnName<TDataEntity>(name);
