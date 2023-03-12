@@ -36,8 +36,13 @@ namespace robert_baxter_c969
             services.AddSingleton<IFormFactory, FormFactory>();
 
             // load all of the forms here
+            // singleton forms for forms that cannot be closed and reopened
             services.AddSingleton<Login>();
             services.AddSingleton<MainForm>();
+
+            // trasient forms for forms that can be closed and reopened
+            services.AddTransient<UserForm>();
+            services.AddTransient<ViewAppointmentsForm>();
             
             // configure custom logger to output to text files
             services.AddTransient<Logger>();

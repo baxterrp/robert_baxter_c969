@@ -46,8 +46,7 @@ namespace robert_baxter_c969.Forms
                     // only hide to not close app
                     this.Hide();
 
-                    // when the main form is closed, log end of application and finally close this one
-                    //mainForm.FormClosed += (s, args) => _logger.LogInformation("Terminating application");
+                    // when the main form is closed finally close this one
                     mainForm.FormClosed += (s, args) => Close();
 
                     // set the user for life of app
