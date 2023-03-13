@@ -1,4 +1,4 @@
-﻿namespace robert_baxter_c969.Data
+﻿namespace robert_baxter_c969.Configuration
 {
     public class TableConfiguration
     {

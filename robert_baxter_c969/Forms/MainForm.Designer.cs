@@ -1,4 +1,4 @@
-﻿namespace robert_baxter_c969
+﻿namespace robert_baxter_c969.Forms
 {
     partial class MainForm
     {

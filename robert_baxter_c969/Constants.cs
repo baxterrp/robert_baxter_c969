@@ -23,14 +23,14 @@
         public static string GetAllCustomers =
 @"
     SELECT 
-        c.customerId as Id,
-        c.customerName as Name,
-        a.address as AddressLine1,
-        a.address2 as AddressLine2,
-        a.phone as PhoneNumber,
-        a.postalCode as ZipCode,
-        ci.city as City,
-        co.country as Country
+        c.customerId AS Id,
+        c.customerName AS Name,
+        a.address AS AddressLine1,
+        a.address2 AS AddressLine2,
+        a.phone AS PhoneNumber,
+        a.postalCode AS ZipCode,
+        ci.city AS City,
+        co.country AS Country
     FROM customer c
         INNER JOIN address a
             on c.addressId = a.addressId

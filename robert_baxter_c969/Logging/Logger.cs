@@ -14,7 +14,7 @@ namespace robert_baxter_c969.Logging
             var date = DateTime.UtcNow.ToShortDateString().Replace("/", "-");
 
             // all logs will be output to the Logging/Logs folder but will not be added to the solution
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "Logging/Logs", $"{date}-{callerMember}.txt");
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{date}-{callerMember}.txt");
             _streamWriter = new StreamWriter(filePath, true);
         }
 

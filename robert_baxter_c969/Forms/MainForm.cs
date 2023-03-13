@@ -7,7 +7,7 @@ using robert_baxter_c969.Forms;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace robert_baxter_c969
+namespace robert_baxter_c969.Forms
 {
     public partial class MainForm : BaseForm<MainForm>
     {
@@ -22,6 +22,7 @@ namespace robert_baxter_c969
         {
             InitializeComponent();
         }
+
         private async void LoadCustomers(object sender, System.EventArgs e)
         {
             await ExecuteAsync(async () =>
