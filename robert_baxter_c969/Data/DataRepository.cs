@@ -171,6 +171,30 @@ namespace robert_baxter_c969.Data
             }
         }
 
+        public async Task<int> ExecuteScalar(string sql, IDictionary<string, object> parameters)
+        {
+            using (var connection = new MySqlConnection(_connectionConfig.ConnectionString))
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = sql;
+
+                foreach (var param in parameters ?? new Dictionary<string, object>())
+                {
+                    command.Parameters.AddWithValue($"@{param.Key}", param.Value);
+                }
+
+                await connection.OpenAsync();
+                var result = await command.ExecuteScalarAsync();
+
+                if(int.TryParse(result?.ToString() ?? string.Empty, out int parsedValue))
+                {
+                    return parsedValue; 
+                }
+
+                return 0;
+            }
+        }
+
         private static void SetDataEntityValues<TDataEntity>(TDataEntity dataEntity) where TDataEntity : DataEntity
         {
             // don't update created by values if already set
@@ -251,7 +275,7 @@ namespace robert_baxter_c969.Data
                         prop.SetValue(entity, stringValue);
                         break;
                     case DateTime dateTimeValue:
-                        prop.SetValue(entity, dateTimeValue);
+                        prop.SetValue(entity, dateTimeValue.ToLocalTime());
                         break;
 
                     // was getting a format exception converting the TINYINT value to boolean so i'm just comparing it to 0

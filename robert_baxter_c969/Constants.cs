@@ -39,5 +39,24 @@
         INNER JOIN country co
             on ci.countryId = co.countryId
 ";
+        public static string GetAppointmentsByUserId =
+@"
+    SELECT 
+        a.appointmentId AS Id,
+        a.title AS Title,
+        a.description AS Description,
+        a.location AS Location,
+        a.contact AS Contact,
+        a.type AS Type,
+        a.start AS StartTime,
+        a.end AS EndTime,
+        c.customerName AS Customer
+    FROM appointment a
+        INNER JOIN customer c
+            ON a.customerId = c.customerId
+    WHERE a.userId = @UserId
+";
+        public static string CheckUpcomingAppointments =
+            "SELECT IF((SELECT Count(*) FROM appointment WHERE start > DATE_SUB(NOW(), INTERVAL 15 MINUTE)), 1, 0)";
     }
 }

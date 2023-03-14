@@ -13,5 +13,6 @@ namespace robert_baxter_c969.Data
         Task Delete<TDataEntity>(TDataEntity entity) where TDataEntity : DataEntity, new();
         Task<IEnumerable<TAggregateDataEntity>> ExecuteCustomQuery<TAggregateDataEntity>(string sql, IDictionary<string, object> parameters)
             where TAggregateDataEntity : new();
+        Task<int> ExecuteScalar(string sql, IDictionary<string, object> parameters);
     }
 }

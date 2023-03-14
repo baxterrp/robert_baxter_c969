@@ -39,6 +39,7 @@ namespace robert_baxter_c969
             // singleton forms for forms that cannot be closed and reopened
             services.AddSingleton<Login>();
             services.AddSingleton<MainForm>();
+            services.AddSingleton<AppointmentAlertForm>();
 
             // trasient forms for forms that can be closed and reopened
             services.AddTransient<UserForm>();

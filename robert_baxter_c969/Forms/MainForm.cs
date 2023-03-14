@@ -3,7 +3,6 @@ using robert_baxter_c969.Data;
 using robert_baxter_c969.Data.Models;
 using robert_baxter_c969.Data.ViewModels;
 using robert_baxter_c969.DependencyInjection;
-using robert_baxter_c969.Forms;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -15,6 +14,8 @@ namespace robert_baxter_c969.Forms
         private BindingSource _customersSource;
         private IEnumerable<CustomerViewModel> _customers;
 
+        private static bool FirstLoad = true;
+
         public MainForm(
             IFormFactory formFactory,
             ILogger<MainForm> logger,
@@ -25,6 +26,7 @@ namespace robert_baxter_c969.Forms
 
         private async void LoadCustomers(object sender, System.EventArgs e)
         {
+            // load customer table
             await ExecuteAsync(async () =>
             {
                 _logger.LogInformation("Looking up all customers");
@@ -35,6 +37,24 @@ namespace robert_baxter_c969.Forms
 
                 return true;
             }, string.Empty, "Failed to load customer data");
+
+            // check upcoming appointments
+            if (FirstLoad)
+            {
+                FirstLoad = false;
+
+                var showAppointmentAlert = false;
+                await ExecuteAsync(async () =>
+                {
+                    showAppointmentAlert = (await _dataRepository.ExecuteScalar(Constants.CheckUpcomingAppointments, null) > 0);
+                    return true;
+                }, string.Empty, "Failed to check upcoming appointments");
+
+                if (showAppointmentAlert)
+                {
+                    _formFactory.CreateForm<AppointmentAlertForm>().Show();
+                }
+            }
         }
 
         private void ExitButton_Click(object sender, System.EventArgs e)

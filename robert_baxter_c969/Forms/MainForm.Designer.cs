@@ -125,7 +125,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Client Scheduler";
-            this.Load += new System.EventHandler(this.LoadCustomers);
+            this.Activated += new System.EventHandler(this.LoadCustomers);
             ((System.ComponentModel.ISupportInitialize)(this.CustomerDisplay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

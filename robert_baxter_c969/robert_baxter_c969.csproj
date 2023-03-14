@@ -121,14 +121,23 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Data\DataEntity.cs" />
     <Compile Include="Data\DataModels\Address.cs" />
+    <Compile Include="Data\DataModels\City.cs" />
+    <Compile Include="Data\DataModels\Country.cs" />
     <Compile Include="Data\DataRepository.cs" />
     <Compile Include="Data\IDataRepository.cs" />
     <Compile Include="Data\DataModels\Customer.cs" />
     <Compile Include="Data\DataModels\User.cs" />
     <Compile Include="Configuration\TableConfiguration.cs" />
+    <Compile Include="Data\ViewModels\AppointmentViewModel.cs" />
     <Compile Include="Data\ViewModels\CustomerViewModel.cs" />
     <Compile Include="DependencyInjection\FormFactory.cs" />
     <Compile Include="DependencyInjection\IFormFactory.cs" />
+    <Compile Include="Forms\AppointmentAlertForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AppointmentAlertForm.Designer.cs">
+      <DependentUpon>AppointmentAlertForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,6 +169,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\AppointmentAlertForm.resx">
+      <DependentUpon>AppointmentAlertForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>

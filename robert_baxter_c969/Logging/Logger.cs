@@ -13,7 +13,7 @@ namespace robert_baxter_c969.Logging
             // a new log file will be created each day it is used
             var date = DateTime.UtcNow.ToShortDateString().Replace("/", "-");
 
-            // all logs will be output to the Logging/Logs folder but will not be added to the solution
+            // all logs will be output to the bin/debug folder
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{date}-{callerMember}.txt");
             _streamWriter = new StreamWriter(filePath, true);
         }
