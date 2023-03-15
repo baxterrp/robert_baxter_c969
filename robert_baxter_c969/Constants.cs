@@ -57,6 +57,11 @@
     WHERE a.userId = @UserId
 ";
         public static string CheckUpcomingAppointments =
-            "SELECT IF((SELECT Count(*) FROM appointment WHERE start > DATE_SUB(NOW(), INTERVAL 15 MINUTE)), 1, 0)";
+@"
+    SELECT IF((SELECT Count(*) 
+        FROM appointment 
+    WHERE start > @Time 
+        AND start < (@Time + INTERVAL 15 MINUTE)
+        AND userId = @UserId), 1, 0)";
     }
 }

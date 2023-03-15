@@ -4,6 +4,7 @@ using robert_baxter_c969.Data.DataModels;
 using robert_baxter_c969.Data.Models;
 using robert_baxter_c969.Data.ViewModels;
 using robert_baxter_c969.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -26,7 +27,7 @@ namespace robert_baxter_c969.Forms
             InitializeComponent();
         }
 
-        private async void LoadCustomers(object sender, System.EventArgs e)
+        private async void LoadCustomers(object sender, EventArgs e)
         {
             // load customer table
             await ExecuteAsync(async () =>
@@ -48,7 +49,12 @@ namespace robert_baxter_c969.Forms
                 var showAppointmentAlert = false;
                 await ExecuteAsync(async () =>
                 {
-                    showAppointmentAlert = (await _dataRepository.ExecuteScalar(Constants.CheckUpcomingAppointments, null) > 0);
+                    showAppointmentAlert = (await _dataRepository.ExecuteScalar(Constants.CheckUpcomingAppointments, new Dictionary<string, object>
+                    {
+                        { "Time", DateTime.UtcNow },
+                        { "UserId", LoggedInUser.Id }
+                    }) > 0);
+
                     return true;
                 }, string.Empty, "Failed to check upcoming appointments");
 
@@ -59,19 +65,19 @@ namespace robert_baxter_c969.Forms
             }
         }
 
-        private void ExitButton_Click(object sender, System.EventArgs e)
+        private void ExitButton_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void AddUserButton_Click(object sender, System.EventArgs e)
+        private void AddUserButton_Click(object sender, EventArgs e)
         {
             var addUserForm = _formFactory.CreateForm<CustomerForm>();
             addUserForm.Text = "Add User";
             addUserForm.Show();
         }
 
-        private async void ModifyUserButton_Click(object sender, System.EventArgs e)
+        private void ModifyUserButton_Click(object sender, EventArgs e)
         {
             var modifyUserForm = _formFactory.CreateForm<CustomerForm>();
             modifyUserForm.SelectedCustomer = _customers.ElementAt(CustomerDisplay.CurrentCell.RowIndex);
@@ -79,13 +85,13 @@ namespace robert_baxter_c969.Forms
             modifyUserForm.Show();
         }
 
-        private void ViewAppointmentsButton_Click(object sender, System.EventArgs e)
+        private void ViewAppointmentsButton_Click(object sender, EventArgs e)
         {
             var viewAppointmentsForm = _formFactory.CreateForm<ViewAppointmentsForm>();
             viewAppointmentsForm.Show();
         }
 
-        private async void DeleteButton_Click(object sender, System.EventArgs e)
+        private async void DeleteButton_Click(object sender, EventArgs e)
         {
             var customerId = _customers.ElementAt(CustomerDisplay.CurrentCell.RowIndex).Id;
             var confirmation = 

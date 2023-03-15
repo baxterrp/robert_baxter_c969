@@ -4,6 +4,8 @@ using robert_baxter_c969.Data.ViewModels;
 using robert_baxter_c969.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace robert_baxter_c969.Forms
@@ -40,6 +42,34 @@ namespace robert_baxter_c969.Forms
 
                 return true;
             }, string.Empty, "Failed to load appointments");
+        }
+
+        private void OnTabChange(object sender, EventArgs e)
+        {
+            var newAppointmentSource = new BindingSource(); 
+            
+            switch(AppointmentTabs.SelectedIndex)
+            {
+                case 1:
+                    newAppointmentSource.DataSource = _appointments.Where(a => GetWeekNumber(a.StartTime) == GetWeekNumber(DateTime.Now));
+                    break;
+                case 2:
+                    newAppointmentSource.DataSource = _appointments.Where(a => a.StartTime.Month == DateTime.Now.Month);
+                    break;
+                default:
+                    newAppointmentSource.DataSource = _appointments;
+                    break;
+            }
+
+            _appointmentsSource.DataSource = newAppointmentSource;
+        }
+
+        private static int GetWeekNumber(DateTime date)
+        {
+            return
+                new CultureInfo(CultureInfo.CurrentCulture.TwoLetterISOLanguageName)
+                    .Calendar
+                    .GetWeekOfYear(date, CalendarWeekRule.FirstFullWeek, DateTimeFormatInfo.CurrentInfo.FirstDayOfWeek);
         }
     }
 }
