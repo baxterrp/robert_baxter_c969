@@ -103,9 +103,11 @@ namespace robert_baxter_c969.Forms
 
                     foreach(var appointment in appointments)
                     {
+                        _logger.LogInformation("Deleting appointment with id {id}", appointment.Id);
                         await _dataRepository.Delete(appointment);
                     }
 
+                    _logger.LogInformation("Deleting customer with id {id}", customer.Id);
                     await _dataRepository.Delete(customer);
 
                     return true;

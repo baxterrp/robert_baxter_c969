@@ -65,6 +65,7 @@ namespace robert_baxter_c969.Forms
                 else
                 {
                     // if no country found, add one
+                    _logger.LogInformation("No country found by the name of {country}, adding...", country.Name);
                     country = await _dataRepository.Insert(country);
                 }
 
@@ -74,6 +75,7 @@ namespace robert_baxter_c969.Forms
                     city.Name = CityValue.Text;
                     city.CountryId = country.Id;
 
+                    _logger.LogInformation("No city found by the name of {city}, adding...", city.Name);
                     city = await _dataRepository.Insert(city);
                 }
 
@@ -94,6 +96,7 @@ namespace robert_baxter_c969.Forms
                 customer.AddressId = address.Id;
                 customer.Active = true;
 
+                _logger.LogInformation("Saving customer with name {name}", customer.CustomerName);
                 customer = customer.Id > 0 ? await _dataRepository.Update(customer) : await _dataRepository.Insert(customer);
 
                 // success if new id generated
