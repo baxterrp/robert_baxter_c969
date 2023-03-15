@@ -32,7 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.AddUserButton = new System.Windows.Forms.Button();
             this.ModifyUserButton = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.DeleteButton = new System.Windows.Forms.Button();
             this.ViewAppointmentsButton = new System.Windows.Forms.Button();
             this.ExitButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.CustomerDisplay)).BeginInit();
@@ -81,14 +81,15 @@
             this.ModifyUserButton.UseVisualStyleBackColor = true;
             this.ModifyUserButton.Click += new System.EventHandler(this.ModifyUserButton_Click);
             // 
-            // button3
+            // DeleteButton
             // 
-            this.button3.Location = new System.Drawing.Point(906, 134);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(133, 43);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "Delete";
-            this.button3.UseVisualStyleBackColor = true;
+            this.DeleteButton.Location = new System.Drawing.Point(906, 134);
+            this.DeleteButton.Name = "DeleteButton";
+            this.DeleteButton.Size = new System.Drawing.Size(133, 43);
+            this.DeleteButton.TabIndex = 4;
+            this.DeleteButton.Text = "Delete";
+            this.DeleteButton.UseVisualStyleBackColor = true;
+            this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
             // 
             // ViewAppointmentsButton
             // 
@@ -117,7 +118,7 @@
             this.ClientSize = new System.Drawing.Size(1048, 330);
             this.Controls.Add(this.ExitButton);
             this.Controls.Add(this.ViewAppointmentsButton);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.DeleteButton);
             this.Controls.Add(this.ModifyUserButton);
             this.Controls.Add(this.AddUserButton);
             this.Controls.Add(this.label1);
@@ -138,7 +139,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button AddUserButton;
         private System.Windows.Forms.Button ModifyUserButton;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button DeleteButton;
         private System.Windows.Forms.Button ViewAppointmentsButton;
         private System.Windows.Forms.Button ExitButton;
     }

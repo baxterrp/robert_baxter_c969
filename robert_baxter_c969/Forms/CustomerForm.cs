@@ -2,17 +2,21 @@
 using robert_baxter_c969.Data;
 using robert_baxter_c969.Data.DataModels;
 using robert_baxter_c969.Data.Models;
+using robert_baxter_c969.Data.ViewModels;
 using robert_baxter_c969.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace robert_baxter_c969.Forms
 {
-    public partial class UserForm : BaseForm<UserForm>
+    public partial class CustomerForm : BaseForm<CustomerForm>
     {
-        public UserForm(
+        public CustomerViewModel SelectedCustomer { get; set; }
+
+        public CustomerForm(
         IFormFactory formFactory,
-        ILogger<UserForm> logger,
+        ILogger<CustomerForm> logger,
             IDataRepository dataRepository) : base(logger, dataRepository, formFactory)
         {
             InitializeComponent();
@@ -24,6 +28,12 @@ namespace robert_baxter_c969.Forms
         }
 
         private async void SaveButton_Click(object sender, System.EventArgs e)
+        {
+            await SaveCustomer();
+            Close();
+        }
+
+        private async Task SaveCustomer()
         {
             await ExecuteAsync(async () =>
             {
@@ -54,10 +64,11 @@ namespace robert_baxter_c969.Forms
                 }
                 else
                 {
+                    // if no country found, add one
                     country = await _dataRepository.Insert(country);
                 }
 
-                // if no city was found, make one 
+                // if no city was found, add one 
                 if (city.Id == 0)
                 {
                     city.Name = CityValue.Text;
@@ -66,34 +77,43 @@ namespace robert_baxter_c969.Forms
                     city = await _dataRepository.Insert(city);
                 }
 
-                // lets just always add the new address
-                var address = new Address
-                {
-                    CityId = city.Id,
-                    AddressLine1 = AddressLine1Value.Text,
-                    AddressLine2 = AddressLine2Value.Text,
-                    PhoneNumber = PhoneNumberValue.Text,
-                    ZipCode = PostalCodeValue.Text,
-                };
+                // find customer if it exists
+                var customer = SelectedCustomer is null ? new Customer() : await _dataRepository.GetById<Customer>(SelectedCustomer.Id);
 
-                address = await _dataRepository.Insert(address);
+                var address = await _dataRepository.GetById<Address>(customer.Id) ?? new Address();
+                address.CityId = city.Id;
+                address.AddressLine1 = AddressLine1Value.Text;
+                address.AddressLine2 = AddressLine2Value.Text;
+                address.PhoneNumber = PhoneNumberValue.Text;
+                address.ZipCode = PostalCodeValue.Text;
 
-                // can safely add new customer now
-                var customer = new Customer
-                {
-                    CustomerName = NameValue.Text,
-                    AddressId = address.Id,
-                    Active = true,
-                };
+                address = address.Id > 0 ? await _dataRepository.Update(address) : await _dataRepository.Insert(address);
 
-                customer = await _dataRepository.Insert(customer);
+                // can safely add or update customer now
+                customer.CustomerName = NameValue.Text;
+                customer.AddressId = address.Id;
+                customer.Active = true;
+
+                customer = customer.Id > 0 ? await _dataRepository.Update(customer) : await _dataRepository.Insert(customer);
 
                 // success if new id generated
                 return customer?.Id > 0;
 
-            }, "Successfully saved new customer", "Failed to save new customer");
+            }, "Successfully saved customer", "Failed to save customer");
+        }
 
-            Close();
+        private void LoadCustomerData(object sender, System.EventArgs e)
+        {
+            if (SelectedCustomer != null)
+            {
+                NameValue.Text = SelectedCustomer.Name;
+                AddressLine1Value.Text = SelectedCustomer.AddressLine1;
+                AddressLine2Value.Text = SelectedCustomer.AddressLine2;
+                CityValue.Text = SelectedCustomer.City;
+                PhoneNumberValue.Text = SelectedCustomer.PhoneNumber;
+                CountryValue.Text = SelectedCustomer.Country;
+                PostalCodeValue.Text = SelectedCustomer.ZipCode;
+            }
         }
     }
 }

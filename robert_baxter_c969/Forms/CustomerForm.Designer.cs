@@ -1,6 +1,6 @@
 ﻿namespace robert_baxter_c969.Forms
 {
-    partial class UserForm
+    partial class CustomerForm
     {
         /// <summary>
         /// Required designer variable.
@@ -202,6 +202,7 @@
             this.Name = "UserForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "UserForm";
+            this.Load += new System.EventHandler(this.LoadCustomerData);
             this.ResumeLayout(false);
             this.PerformLayout();
 

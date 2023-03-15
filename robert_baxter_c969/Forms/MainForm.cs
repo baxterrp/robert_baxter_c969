@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using robert_baxter_c969.Data;
+using robert_baxter_c969.Data.DataModels;
 using robert_baxter_c969.Data.Models;
 using robert_baxter_c969.Data.ViewModels;
 using robert_baxter_c969.DependencyInjection;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace robert_baxter_c969.Forms
@@ -64,14 +66,15 @@ namespace robert_baxter_c969.Forms
 
         private void AddUserButton_Click(object sender, System.EventArgs e)
         {
-            var addUserForm = _formFactory.CreateForm<UserForm>();
+            var addUserForm = _formFactory.CreateForm<CustomerForm>();
             addUserForm.Text = "Add User";
             addUserForm.Show();
         }
 
-        private void ModifyUserButton_Click(object sender, System.EventArgs e)
+        private async void ModifyUserButton_Click(object sender, System.EventArgs e)
         {
-            var modifyUserForm = _formFactory.CreateForm<UserForm>();
+            var modifyUserForm = _formFactory.CreateForm<CustomerForm>();
+            modifyUserForm.SelectedCustomer = _customers.ElementAt(CustomerDisplay.CurrentCell.RowIndex);
             modifyUserForm.Text = "Modify User";
             modifyUserForm.Show();
         }
@@ -80,6 +83,35 @@ namespace robert_baxter_c969.Forms
         {
             var viewAppointmentsForm = _formFactory.CreateForm<ViewAppointmentsForm>();
             viewAppointmentsForm.Show();
+        }
+
+        private async void DeleteButton_Click(object sender, System.EventArgs e)
+        {
+            var customerId = _customers.ElementAt(CustomerDisplay.CurrentCell.RowIndex).Id;
+            var confirmation = 
+                MessageBox.Show("Are you sure you want to delete this customer and all of their appointments?", "Confirm Delete", MessageBoxButtons.YesNo);
+
+            if (DialogResult.Yes.Equals(confirmation))
+            {
+                await ExecuteAsync(async () =>
+                {
+                    var customer = await _dataRepository.GetById<Customer>(customerId);
+                    var appointments = await _dataRepository.Get<Appointment>(new Dictionary<string, string>
+                    {
+                        { nameof(Appointment.CustomerId), customer.Id.ToString() }
+                    });
+
+                    foreach(var appointment in appointments)
+                    {
+                        await _dataRepository.Delete(appointment);
+                    }
+
+                    await _dataRepository.Delete(customer);
+
+                    return true;
+
+                }, "Successfully deleted customer", "Failed to delete customer");
+            }
         }
     }
 }

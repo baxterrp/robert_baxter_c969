@@ -42,7 +42,7 @@ namespace robert_baxter_c969
             services.AddSingleton<AppointmentAlertForm>();
 
             // trasient forms for forms that can be closed and reopened
-            services.AddTransient<UserForm>();
+            services.AddTransient<CustomerForm>();
             services.AddTransient<ViewAppointmentsForm>();
             
             // configure custom logger to output to text files
