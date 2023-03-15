@@ -62,6 +62,7 @@
         FROM appointment 
     WHERE start > @Time 
         AND start < (@Time + INTERVAL 15 MINUTE)
-        AND userId = @UserId), 1, 0)";
+        AND userId = @UserId), 1, 0)
+";
     }
 }

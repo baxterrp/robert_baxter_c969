@@ -34,6 +34,7 @@
             this.AllAppointmentsTab = new System.Windows.Forms.TabPage();
             this.WeeklyAppointmentsTab = new System.Windows.Forms.TabPage();
             this.MonthlyAppointmentsTab = new System.Windows.Forms.TabPage();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.AppointmentDisplay)).BeginInit();
             this.AppointmentTabs.SuspendLayout();
             this.SuspendLayout();
@@ -56,9 +57,11 @@
             this.AppointmentDisplay.Location = new System.Drawing.Point(36, 51);
             this.AppointmentDisplay.MultiSelect = false;
             this.AppointmentDisplay.Name = "AppointmentDisplay";
+            this.AppointmentDisplay.ReadOnly = true;
+            this.AppointmentDisplay.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.AppointmentDisplay.Size = new System.Drawing.Size(774, 313);
             this.AppointmentDisplay.TabIndex = 2;
-            this.AppointmentDisplay.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.AppointmentDisplay.RowHeadersVisible = true;
             // 
             // AppointmentTabs
             // 
@@ -87,7 +90,7 @@
             this.WeeklyAppointmentsTab.Location = new System.Drawing.Point(4, 22);
             this.WeeklyAppointmentsTab.Name = "WeeklyAppointmentsTab";
             this.WeeklyAppointmentsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.WeeklyAppointmentsTab.Size = new System.Drawing.Size(192, 0);
+            this.WeeklyAppointmentsTab.Size = new System.Drawing.Size(320, 0);
             this.WeeklyAppointmentsTab.TabIndex = 1;
             this.WeeklyAppointmentsTab.Text = "Weekly Appointments";
             this.WeeklyAppointmentsTab.UseVisualStyleBackColor = true;
@@ -97,7 +100,7 @@
             this.MonthlyAppointmentsTab.Location = new System.Drawing.Point(4, 22);
             this.MonthlyAppointmentsTab.Name = "MonthlyAppointmentsTab";
             this.MonthlyAppointmentsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.MonthlyAppointmentsTab.Size = new System.Drawing.Size(192, 0);
+            this.MonthlyAppointmentsTab.Size = new System.Drawing.Size(320, 0);
             this.MonthlyAppointmentsTab.TabIndex = 2;
             this.MonthlyAppointmentsTab.Text = "Monthly Appointments";
             this.MonthlyAppointmentsTab.UseVisualStyleBackColor = true;
@@ -128,5 +131,6 @@
         private System.Windows.Forms.TabPage AllAppointmentsTab;
         private System.Windows.Forms.TabPage WeeklyAppointmentsTab;
         private System.Windows.Forms.TabPage MonthlyAppointmentsTab;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

@@ -13,7 +13,7 @@ namespace robert_baxter_c969.Forms
     public partial class ViewAppointmentsForm : BaseForm<ViewAppointmentsForm>
     {
         private IEnumerable<AppointmentViewModel> _appointments;
-        private BindingSource _appointmentsSource;
+        private BindingSource _appointmentSource;
 
         public ViewAppointmentsForm(
             IFormFactory formFactory,
@@ -37,8 +37,8 @@ namespace robert_baxter_c969.Forms
                     { "UserId", _formFactory.CreateForm<MainForm>().LoggedInUser.Id }
                 });
 
-                _appointmentsSource = new BindingSource { DataSource = _appointments };
-                AppointmentDisplay.DataSource = _appointmentsSource;
+                _appointmentSource = new BindingSource { DataSource = _appointments.Any() ? _appointments : null };
+                AppointmentDisplay.DataSource = _appointmentSource;
 
                 return true;
             }, string.Empty, "Failed to load appointments");
@@ -51,17 +51,19 @@ namespace robert_baxter_c969.Forms
             switch(AppointmentTabs.SelectedIndex)
             {
                 case 1:
-                    newAppointmentSource.DataSource = _appointments.Where(a => GetWeekNumber(a.StartTime) == GetWeekNumber(DateTime.Now));
+                    var weeklyAppointments = _appointments.Where(a => GetWeekNumber(a.StartTime) == GetWeekNumber(DateTime.Now));
+                    newAppointmentSource.DataSource = weeklyAppointments.Any() ? weeklyAppointments : null;
                     break;
                 case 2:
-                    newAppointmentSource.DataSource = _appointments.Where(a => a.StartTime.Month == DateTime.Now.Month);
+                    var monthlyAppointments = _appointments.Where(a => a.StartTime.Month == DateTime.Now.Month);
+                    newAppointmentSource.DataSource = monthlyAppointments.Any() ? monthlyAppointments : null;
                     break;
                 default:
-                    newAppointmentSource.DataSource = _appointments;
+                    newAppointmentSource.DataSource = _appointments.Any() ? _appointments : null;
                     break;
             }
 
-            _appointmentsSource.DataSource = newAppointmentSource;
+            _appointmentSource.DataSource = newAppointmentSource;
         }
 
         private static int GetWeekNumber(DateTime date)
