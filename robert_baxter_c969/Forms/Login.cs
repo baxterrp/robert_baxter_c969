@@ -8,8 +8,11 @@ using System.Linq;
 
 namespace robert_baxter_c969.Forms
 {
+
     public partial class Login : BaseForm<Login>
     {
+        private readonly (string ErrorMessage, string UserTitle, string PasswordTitle) Culture;
+
         public Login(
             IFormFactory formFactory,
             ILogger<Login> logger,
@@ -21,13 +24,17 @@ namespace robert_baxter_c969.Forms
             _userNameText.MaxLength = Constants.FortyCharacterTextLimit;
             _passwordText.MaxLength = Constants.FortyCharacterTextLimit;
             _passwordText.PasswordChar = Constants.PasswordMaskCharacter;
+
+            Culture = CultureInfo.CurrentCulture.Name.Equals(Constants.SpanishCultureInfo) ?
+                (Constants.InvalidPasswordSpanish, "Nombre De Usuario", "Contraseña") :
+                (Constants.InvalidPasswordEnglish, "User Name", "Password");
+
+            UserNameLabel.Text = Culture.UserTitle;
+            PasswordLabel.Text = Culture.PasswordTitle;
         }
 
         private async void LoginButton_Click(object sender, System.EventArgs e)
         {
-            var errorMessage = CultureInfo.CurrentCulture.Name.Equals(Constants.SpanishCultureInfo) ?
-                Constants.InvalidPasswordSpanish : Constants.InvalidPasswordEnglish;
-
             await ExecuteAsync(async () =>
             {
                 var criteria = new Dictionary<string, string>
@@ -60,7 +67,7 @@ namespace robert_baxter_c969.Forms
                 }
 
                 return passwordCorrect;
-            }, string.Empty, errorMessage);
+            }, string.Empty, Culture.ErrorMessage);
         }
 
         private void UserName_TextChanged(object sender, System.EventArgs e)

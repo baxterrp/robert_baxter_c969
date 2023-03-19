@@ -278,7 +278,7 @@ namespace robert_baxter_c969.Data
                         prop.SetValue(entity, dateTimeValue.ToLocalTime());
                         break;
 
-                    // was getting a format exception converting the TINYINT value to boolean so i'm just comparing it to 0
+                    // was getting a format exception converting the TINYINT value in MySQL to boolean so i'm just comparing it to 0
                     case sbyte booleanValue:
                         prop.SetValue(entity, booleanValue > 0);
                         break;

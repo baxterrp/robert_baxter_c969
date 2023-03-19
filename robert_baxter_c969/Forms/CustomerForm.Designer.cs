@@ -52,7 +52,7 @@
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(133, 43);
             this.ExitButton.TabIndex = 0;
-            this.ExitButton.Text = "Exit";
+            this.ExitButton.Text = "Cancel";
             this.ExitButton.UseVisualStyleBackColor = true;
             this.ExitButton.Click += new System.EventHandler(this.ExitButton_Click);
             // 
@@ -178,7 +178,7 @@
             this.label5.TabIndex = 14;
             this.label5.Text = "Phone Number";
             // 
-            // UserForm
+            // CustomerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -199,7 +199,7 @@
             this.Controls.Add(this.NameLabel);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.ExitButton);
-            this.Name = "UserForm";
+            this.Name = "CustomerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "UserForm";
             this.Load += new System.EventHandler(this.LoadCustomerData);

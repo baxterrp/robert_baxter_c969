@@ -8,6 +8,9 @@ namespace robert_baxter_c969.Data.ViewModels
         [ColumnName("Id")]
         public int Id { get; set; }
 
+        [ColumnName("CustomerId")]
+        public int CustomerId { get; set; }
+
         [ColumnName("Customer")]
         public string Customer { get; set; }
 
@@ -31,5 +34,8 @@ namespace robert_baxter_c969.Data.ViewModels
 
         [ColumnName("EndTime")]
         public DateTime EndTime { get; set; }
+
+        [ColumnName("Url")]
+        public string Url { get; set; }
     }
 }

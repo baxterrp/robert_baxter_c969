@@ -44,7 +44,8 @@ namespace robert_baxter_c969
             // trasient forms for forms that can be closed and reopened
             services.AddTransient<CustomerForm>();
             services.AddTransient<ViewAppointmentsForm>();
-            
+            services.AddTransient<AppointmentForm>();
+
             // configure custom logger to output to text files
             services.AddTransient<Logger>();
             services.AddLogging();

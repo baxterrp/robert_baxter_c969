@@ -48,9 +48,11 @@
         a.location AS Location,
         a.contact AS Contact,
         a.type AS Type,
+        a.url as Url,
         a.start AS StartTime,
         a.end AS EndTime,
-        c.customerName AS Customer
+        c.customerName AS Customer,
+        c.customerId as CustomerId
     FROM appointment a
         INNER JOIN customer c
             ON a.customerId = c.customerId

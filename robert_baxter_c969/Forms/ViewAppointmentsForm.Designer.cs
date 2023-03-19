@@ -35,6 +35,9 @@
             this.WeeklyAppointmentsTab = new System.Windows.Forms.TabPage();
             this.MonthlyAppointmentsTab = new System.Windows.Forms.TabPage();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.AddAppointmentButton = new System.Windows.Forms.Button();
+            this.ModifyAppointmentButton = new System.Windows.Forms.Button();
+            this.DeleteAppointmentButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.AppointmentDisplay)).BeginInit();
             this.AppointmentTabs.SuspendLayout();
             this.SuspendLayout();
@@ -61,7 +64,6 @@
             this.AppointmentDisplay.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.AppointmentDisplay.Size = new System.Drawing.Size(774, 313);
             this.AppointmentDisplay.TabIndex = 2;
-            this.AppointmentDisplay.RowHeadersVisible = true;
             // 
             // AppointmentTabs
             // 
@@ -105,11 +107,44 @@
             this.MonthlyAppointmentsTab.Text = "Monthly Appointments";
             this.MonthlyAppointmentsTab.UseVisualStyleBackColor = true;
             // 
+            // AddAppointmentButton
+            // 
+            this.AddAppointmentButton.Location = new System.Drawing.Point(820, 51);
+            this.AddAppointmentButton.Name = "AddAppointmentButton";
+            this.AddAppointmentButton.Size = new System.Drawing.Size(133, 43);
+            this.AddAppointmentButton.TabIndex = 4;
+            this.AddAppointmentButton.Text = "Schedule Appointment";
+            this.AddAppointmentButton.UseVisualStyleBackColor = true;
+            this.AddAppointmentButton.Click += new System.EventHandler(this.AddAppointmentButton_Click);
+            // 
+            // ModifyAppointmentButton
+            // 
+            this.ModifyAppointmentButton.Location = new System.Drawing.Point(820, 100);
+            this.ModifyAppointmentButton.Name = "ModifyAppointmentButton";
+            this.ModifyAppointmentButton.Size = new System.Drawing.Size(133, 43);
+            this.ModifyAppointmentButton.TabIndex = 5;
+            this.ModifyAppointmentButton.Text = "Edit Appointment";
+            this.ModifyAppointmentButton.UseVisualStyleBackColor = true;
+            this.ModifyAppointmentButton.Click += new System.EventHandler(this.ModifyAppointmentButton_Click);
+            // 
+            // DeleteAppointmentButton
+            // 
+            this.DeleteAppointmentButton.Location = new System.Drawing.Point(820, 149);
+            this.DeleteAppointmentButton.Name = "DeleteAppointmentButton";
+            this.DeleteAppointmentButton.Size = new System.Drawing.Size(133, 43);
+            this.DeleteAppointmentButton.TabIndex = 6;
+            this.DeleteAppointmentButton.Text = "Cancel Appointment";
+            this.DeleteAppointmentButton.UseVisualStyleBackColor = true;
+            this.DeleteAppointmentButton.Click += new System.EventHandler(this.DeleteAppointmentButton_Click);
+            // 
             // ViewAppointmentsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(965, 450);
+            this.Controls.Add(this.DeleteAppointmentButton);
+            this.Controls.Add(this.ModifyAppointmentButton);
+            this.Controls.Add(this.AddAppointmentButton);
             this.Controls.Add(this.AppointmentTabs);
             this.Controls.Add(this.AppointmentDisplay);
             this.Controls.Add(this.ExitButton);
@@ -132,5 +167,8 @@
         private System.Windows.Forms.TabPage WeeklyAppointmentsTab;
         private System.Windows.Forms.TabPage MonthlyAppointmentsTab;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Button AddAppointmentButton;
+        private System.Windows.Forms.Button ModifyAppointmentButton;
+        private System.Windows.Forms.Button DeleteAppointmentButton;
     }
 }
