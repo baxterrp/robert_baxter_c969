@@ -1,5 +1,6 @@
 ﻿using robert_baxter_c969.Configuration;
 using System;
+using System.ComponentModel;
 
 namespace robert_baxter_c969.Data.ViewModels
 {
@@ -9,6 +10,7 @@ namespace robert_baxter_c969.Data.ViewModels
         public int Id { get; set; }
 
         [ColumnName("CustomerId")]
+        [Browsable(false)]
         public int CustomerId { get; set; }
 
         [ColumnName("Customer")]

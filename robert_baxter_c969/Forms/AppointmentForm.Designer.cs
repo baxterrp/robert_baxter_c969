@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace robert_baxter_c969.Forms
 {
@@ -51,6 +52,8 @@ namespace robert_baxter_c969.Forms
             this.ContactLabel = new System.Windows.Forms.Label();
             this.UrlValue = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.StartTimeErrorMessage = new System.Windows.Forms.Label();
+            this.EndTimeErrorMessage = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // CancelButton
@@ -112,21 +115,23 @@ namespace robert_baxter_c969.Forms
             // 
             // StartTimePicker
             // 
-            this.StartTimePicker.CustomFormat = "MM/dd/yyyy hh:mm:ss";
+            this.StartTimePicker.CustomFormat = "MM\'/\'dd\'/\'yyyy hh\':\'mm tt";
             this.StartTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.StartTimePicker.Location = new System.Drawing.Point(17, 204);
             this.StartTimePicker.Name = "StartTimePicker";
             this.StartTimePicker.Size = new System.Drawing.Size(337, 20);
             this.StartTimePicker.TabIndex = 5;
+            this.StartTimePicker.ValueChanged += new System.EventHandler(this.ValidateOnFocusOut);
             // 
             // EndTimePicker
             // 
-            this.EndTimePicker.CustomFormat = "MM/dd/yyyy hh:mm:ss";
+            this.EndTimePicker.CustomFormat = "MM\'/\'dd\'/\'yyyy hh\':\'mm tt";
             this.EndTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.EndTimePicker.Location = new System.Drawing.Point(17, 266);
             this.EndTimePicker.Name = "EndTimePicker";
             this.EndTimePicker.Size = new System.Drawing.Size(337, 20);
             this.EndTimePicker.TabIndex = 7;
+            this.EndTimePicker.ValueChanged += new System.EventHandler(this.ValidateOnFocusOut);
             // 
             // EndTimeLabel
             // 
@@ -154,6 +159,7 @@ namespace robert_baxter_c969.Forms
             this.TitleValue.Name = "TitleValue";
             this.TitleValue.Size = new System.Drawing.Size(336, 20);
             this.TitleValue.TabIndex = 9;
+            this.TitleValue.TextChanged += new System.EventHandler(this.ValidateOnFocusOut);
             // 
             // LocationText
             // 
@@ -187,7 +193,7 @@ namespace robert_baxter_c969.Forms
             this.DescriptionText.Location = new System.Drawing.Point(388, 204);
             this.DescriptionText.Multiline = true;
             this.DescriptionText.Name = "DescriptionText";
-            this.DescriptionText.Size = new System.Drawing.Size(336, 135);
+            this.DescriptionText.Size = new System.Drawing.Size(336, 145);
             this.DescriptionText.TabIndex = 13;
             // 
             // TypeValue
@@ -196,6 +202,7 @@ namespace robert_baxter_c969.Forms
             this.TypeValue.Name = "TypeValue";
             this.TypeValue.Size = new System.Drawing.Size(336, 20);
             this.TypeValue.TabIndex = 15;
+            this.TypeValue.TextChanged += new System.EventHandler(this.ValidateOnFocusOut);
             // 
             // TypeLabel
             // 
@@ -226,7 +233,7 @@ namespace robert_baxter_c969.Forms
             // 
             // UrlValue
             // 
-            this.UrlValue.Location = new System.Drawing.Point(18, 319);
+            this.UrlValue.Location = new System.Drawing.Point(16, 329);
             this.UrlValue.Name = "UrlValue";
             this.UrlValue.Size = new System.Drawing.Size(336, 20);
             this.UrlValue.TabIndex = 19;
@@ -235,17 +242,37 @@ namespace robert_baxter_c969.Forms
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(15, 299);
+            this.label4.Location = new System.Drawing.Point(13, 309);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(26, 17);
             this.label4.TabIndex = 18;
             this.label4.Text = "Url";
+            // 
+            // StartTimeErrorMessage
+            // 
+            this.StartTimeErrorMessage.AutoSize = true;
+            this.StartTimeErrorMessage.ForeColor = System.Drawing.Color.Red;
+            this.StartTimeErrorMessage.Location = new System.Drawing.Point(15, 227);
+            this.StartTimeErrorMessage.Name = "StartTimeErrorMessage";
+            this.StartTimeErrorMessage.Size = new System.Drawing.Size(0, 13);
+            this.StartTimeErrorMessage.TabIndex = 20;
+            // 
+            // EndTimeErrorMessage
+            // 
+            this.EndTimeErrorMessage.AutoSize = true;
+            this.EndTimeErrorMessage.ForeColor = System.Drawing.Color.Red;
+            this.EndTimeErrorMessage.Location = new System.Drawing.Point(15, 289);
+            this.EndTimeErrorMessage.Name = "EndTimeErrorMessage";
+            this.EndTimeErrorMessage.Size = new System.Drawing.Size(0, 13);
+            this.EndTimeErrorMessage.TabIndex = 21;
             // 
             // AppointmentForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(736, 416);
+            this.Controls.Add(this.EndTimeErrorMessage);
+            this.Controls.Add(this.StartTimeErrorMessage);
             this.Controls.Add(this.UrlValue);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.ContactValue);
@@ -298,5 +325,7 @@ namespace robert_baxter_c969.Forms
         private Label ContactLabel;
         private TextBox UrlValue;
         private Label label4;
+        private Label StartTimeErrorMessage;
+        private Label EndTimeErrorMessage;
     }
 }
