@@ -5,6 +5,7 @@ using robert_baxter_c969.Data.Models;
 using robert_baxter_c969.Data.ViewModels;
 using robert_baxter_c969.DependencyInjection;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,6 +30,20 @@ namespace robert_baxter_c969.Forms
 
         private async void SaveButton_Click(object sender, System.EventArgs e)
         {
+            var requiredFields = new List<string>
+            {
+                nameof(NameValue), nameof(AddressLine1Value), nameof(CityValue), nameof(PhoneNumberValue), nameof(CountryValue), nameof(PostalCodeValue)
+            };
+
+            var hasErrors = false;
+
+            foreach(var field in requiredFields)
+            {
+                hasErrors |= ValidateField(field);
+            }
+
+            if (hasErrors) { return; }
+
             await SaveCustomer();
             Close();
         }
@@ -46,7 +61,7 @@ namespace robert_baxter_c969.Forms
                     Name = CountryValue.Text,
                 };
 
-                City city = new City();
+                var city = new City();
 
                 if (country.Id > 0)
                 {
@@ -117,6 +132,49 @@ namespace robert_baxter_c969.Forms
                 CountryValue.Text = SelectedCustomer.Country;
                 PostalCodeValue.Text = SelectedCustomer.ZipCode;
             }
+        }
+
+        private bool ValidateField(string fieldName)
+        {
+            var hasError = false;
+
+            switch (fieldName)
+            {
+                case nameof(NameValue):
+                    hasError = string.IsNullOrWhiteSpace(NameValue.Text);
+                    NameValue.BackColor = hasError ? Color.Salmon : Color.White;
+                    break;
+                case nameof(AddressLine1Value):
+                    hasError = string.IsNullOrWhiteSpace(AddressLine1Value.Text);
+                    AddressLine1Value.BackColor = hasError ? Color.Salmon : Color.White;
+                    break;
+                case nameof(CityValue):
+                    hasError = string.IsNullOrWhiteSpace(CityValue.Text);
+                    CityValue.BackColor = hasError ? Color.Salmon : Color.White;
+                    break;
+                case nameof(PhoneNumberValue):
+                    hasError = string.IsNullOrWhiteSpace(PhoneNumberValue.Text);
+                    PhoneNumberValue.BackColor = hasError ? Color.Salmon : Color.White;
+                    break;
+                case nameof(CountryValue):
+                    hasError = string.IsNullOrWhiteSpace(CountryValue.Text);
+                    CountryValue.BackColor = hasError ? Color.Salmon : Color.White;
+                    break;
+                case nameof(PostalCodeValue):
+                    hasError = string.IsNullOrWhiteSpace(PostalCodeValue.Text);
+                    PostalCodeValue.BackColor = hasError ? Color.Salmon : Color.White;
+                    break;
+            }
+
+            SaveButton.Enabled = !hasError;
+
+            return hasError;
+        }
+
+        private void FieldFocusOut(object sender, System.EventArgs e)
+        {
+            var name = sender.GetType().GetProperty("Name").GetValue(sender, null).ToString();
+            ValidateField(name);
         }
     }
 }

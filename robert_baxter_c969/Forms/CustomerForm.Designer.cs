@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.ExitButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
             this.NameLabel = new System.Windows.Forms.Label();
@@ -44,6 +45,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.PhoneNumberValue = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.CustomerFormErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.CustomerFormErrorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // ExitButton
@@ -90,6 +93,7 @@
             this.NameValue.Name = "NameValue";
             this.NameValue.Size = new System.Drawing.Size(225, 20);
             this.NameValue.TabIndex = 4;
+            this.NameValue.Leave += new System.EventHandler(this.FieldFocusOut);
             // 
             // AddressLine1Value
             // 
@@ -97,6 +101,7 @@
             this.AddressLine1Value.Name = "AddressLine1Value";
             this.AddressLine1Value.Size = new System.Drawing.Size(225, 20);
             this.AddressLine1Value.TabIndex = 5;
+            this.AddressLine1Value.Leave += new System.EventHandler(this.FieldFocusOut);
             // 
             // AddressLine2Value
             // 
@@ -104,6 +109,7 @@
             this.AddressLine2Value.Name = "AddressLine2Value";
             this.AddressLine2Value.Size = new System.Drawing.Size(225, 20);
             this.AddressLine2Value.TabIndex = 7;
+            this.AddressLine2Value.Leave += new System.EventHandler(this.FieldFocusOut);
             // 
             // label1
             // 
@@ -120,6 +126,7 @@
             this.CityValue.Name = "CityValue";
             this.CityValue.Size = new System.Drawing.Size(225, 20);
             this.CityValue.TabIndex = 9;
+            this.CityValue.Leave += new System.EventHandler(this.FieldFocusOut);
             // 
             // label2
             // 
@@ -136,6 +143,7 @@
             this.CountryValue.Name = "CountryValue";
             this.CountryValue.Size = new System.Drawing.Size(225, 20);
             this.CountryValue.TabIndex = 11;
+            this.CountryValue.Leave += new System.EventHandler(this.FieldFocusOut);
             // 
             // label3
             // 
@@ -152,6 +160,7 @@
             this.PostalCodeValue.Name = "PostalCodeValue";
             this.PostalCodeValue.Size = new System.Drawing.Size(225, 20);
             this.PostalCodeValue.TabIndex = 13;
+            this.PostalCodeValue.Leave += new System.EventHandler(this.FieldFocusOut);
             // 
             // label4
             // 
@@ -168,6 +177,7 @@
             this.PhoneNumberValue.Name = "PhoneNumberValue";
             this.PhoneNumberValue.Size = new System.Drawing.Size(225, 20);
             this.PhoneNumberValue.TabIndex = 15;
+            this.PhoneNumberValue.Leave += new System.EventHandler(this.FieldFocusOut);
             // 
             // label5
             // 
@@ -177,6 +187,10 @@
             this.label5.Size = new System.Drawing.Size(78, 13);
             this.label5.TabIndex = 14;
             this.label5.Text = "Phone Number";
+            // 
+            // CustomerFormErrorProvider
+            // 
+            this.CustomerFormErrorProvider.ContainerControl = this;
             // 
             // CustomerForm
             // 
@@ -203,6 +217,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "UserForm";
             this.Load += new System.EventHandler(this.LoadCustomerData);
+            ((System.ComponentModel.ISupportInitialize)(this.CustomerFormErrorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -226,5 +241,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox PhoneNumberValue;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ErrorProvider CustomerFormErrorProvider;
     }
 }
