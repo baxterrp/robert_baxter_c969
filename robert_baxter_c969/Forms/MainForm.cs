@@ -121,5 +121,10 @@ namespace robert_baxter_c969.Forms
                 }, "Successfully deleted customer", "Failed to delete customer");
             }
         }
+
+        private void ReportsButton_Click(object sender, EventArgs e)
+        {
+            _formFactory.CreateForm<Reports>().Show();
+        }
     }
 }

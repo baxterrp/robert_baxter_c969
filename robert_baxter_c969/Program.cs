@@ -45,6 +45,7 @@ namespace robert_baxter_c969
             services.AddTransient<CustomerForm>();
             services.AddTransient<ViewAppointmentsForm>();
             services.AddTransient<AppointmentForm>();
+            services.AddTransient<Reports>();
 
             // configure custom logger to output to text files
             services.AddTransient<Logger>();
