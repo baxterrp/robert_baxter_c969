@@ -99,9 +99,9 @@ namespace robert_baxter_c969.Forms
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(13, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 17);
+            this.label1.Size = new System.Drawing.Size(73, 17);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Customer";
+            this.label1.Text = "Customer*";
             // 
             // StartTimeLabel
             // 
@@ -109,9 +109,9 @@ namespace robert_baxter_c969.Forms
             this.StartTimeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.StartTimeLabel.Location = new System.Drawing.Point(14, 184);
             this.StartTimeLabel.Name = "StartTimeLabel";
-            this.StartTimeLabel.Size = new System.Drawing.Size(73, 17);
+            this.StartTimeLabel.Size = new System.Drawing.Size(78, 17);
             this.StartTimeLabel.TabIndex = 4;
-            this.StartTimeLabel.Text = "Start Time";
+            this.StartTimeLabel.Text = "Start Time*";
             // 
             // StartTimePicker
             // 
@@ -139,9 +139,9 @@ namespace robert_baxter_c969.Forms
             this.EndTimeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EndTimeLabel.Location = new System.Drawing.Point(14, 246);
             this.EndTimeLabel.Name = "EndTimeLabel";
-            this.EndTimeLabel.Size = new System.Drawing.Size(68, 17);
+            this.EndTimeLabel.Size = new System.Drawing.Size(73, 17);
             this.EndTimeLabel.TabIndex = 6;
-            this.EndTimeLabel.Text = "End Time";
+            this.EndTimeLabel.Text = "End Time*";
             // 
             // TitleLabel
             // 
@@ -149,9 +149,9 @@ namespace robert_baxter_c969.Forms
             this.TitleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TitleLabel.Location = new System.Drawing.Point(14, 124);
             this.TitleLabel.Name = "TitleLabel";
-            this.TitleLabel.Size = new System.Drawing.Size(35, 17);
+            this.TitleLabel.Size = new System.Drawing.Size(40, 17);
             this.TitleLabel.TabIndex = 8;
-            this.TitleLabel.Text = "Title";
+            this.TitleLabel.Text = "Title*";
             // 
             // TitleValue
             // 
@@ -210,9 +210,9 @@ namespace robert_baxter_c969.Forms
             this.TypeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TypeLabel.Location = new System.Drawing.Point(386, 12);
             this.TypeLabel.Name = "TypeLabel";
-            this.TypeLabel.Size = new System.Drawing.Size(40, 17);
+            this.TypeLabel.Size = new System.Drawing.Size(45, 17);
             this.TypeLabel.TabIndex = 14;
-            this.TypeLabel.Text = "Type";
+            this.TypeLabel.Text = "Type*";
             // 
             // ContactValue
             // 

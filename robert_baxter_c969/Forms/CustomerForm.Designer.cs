@@ -74,18 +74,18 @@
             this.NameLabel.AutoSize = true;
             this.NameLabel.Location = new System.Drawing.Point(33, 34);
             this.NameLabel.Name = "NameLabel";
-            this.NameLabel.Size = new System.Drawing.Size(35, 13);
+            this.NameLabel.Size = new System.Drawing.Size(39, 13);
             this.NameLabel.TabIndex = 2;
-            this.NameLabel.Text = "Name";
+            this.NameLabel.Text = "Name*";
             // 
             // AddressLine1Label
             // 
             this.AddressLine1Label.AutoSize = true;
             this.AddressLine1Label.Location = new System.Drawing.Point(33, 89);
             this.AddressLine1Label.Name = "AddressLine1Label";
-            this.AddressLine1Label.Size = new System.Drawing.Size(77, 13);
+            this.AddressLine1Label.Size = new System.Drawing.Size(81, 13);
             this.AddressLine1Label.TabIndex = 3;
-            this.AddressLine1Label.Text = "Address Line 1";
+            this.AddressLine1Label.Text = "Address Line 1*";
             // 
             // NameValue
             // 
@@ -133,9 +133,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(33, 190);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(24, 13);
+            this.label2.Size = new System.Drawing.Size(28, 13);
             this.label2.TabIndex = 8;
-            this.label2.Text = "City";
+            this.label2.Text = "City*";
             // 
             // CountryValue
             // 
@@ -150,9 +150,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(312, 89);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(43, 13);
+            this.label3.Size = new System.Drawing.Size(47, 13);
             this.label3.TabIndex = 10;
-            this.label3.Text = "Country";
+            this.label3.Text = "Country*";
             // 
             // PostalCodeValue
             // 
@@ -167,9 +167,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(312, 139);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(64, 13);
+            this.label4.Size = new System.Drawing.Size(68, 13);
             this.label4.TabIndex = 12;
-            this.label4.Text = "Postal Code";
+            this.label4.Text = "Postal Code*";
             // 
             // PhoneNumberValue
             // 
@@ -184,9 +184,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(312, 34);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(78, 13);
+            this.label5.Size = new System.Drawing.Size(82, 13);
             this.label5.TabIndex = 14;
-            this.label5.Text = "Phone Number";
+            this.label5.Text = "Phone Number*";
             // 
             // CustomerFormErrorProvider
             // 
