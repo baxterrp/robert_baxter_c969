@@ -61,6 +61,9 @@ namespace robert_baxter_c969.Forms
         private void ExecuteAppByMonth_Click(object sender, EventArgs e)
         {
             var selectedMonth = AppointmentMonthSelectList.SelectedIndex + 1;
+
+            _logger.LogInformation("Generating Appointments by month report for the month of {month}", DateTimeFormatInfo.CurrentInfo.MonthNames[selectedMonth]);
+
             var filteredAppointments = _appointments
                 .Where(appointment => appointment.Start.Month == selectedMonth)
                 .GroupBy(appointment => appointment.Type)
@@ -86,6 +89,8 @@ namespace robert_baxter_c969.Forms
         {
             var userId = ConsultantSelectList.SelectedValue.ToString();
 
+            _logger.LogInformation("Generating consultant schedule report for user {userId}", userId);
+
             await ExecuteAsync(async () =>
             {
                 var appointments = await _dataRepository.ExecuteCustomQuery<AppointmentViewModel>(Constants.GetAppointmentsByUserId, new Dictionary<string, object>
@@ -110,6 +115,9 @@ namespace robert_baxter_c969.Forms
         private void ExecuteCustomerByCountry_Click(object sender, EventArgs e)
         {
             var countryName = CountrySelectList.SelectedValue.ToString();
+
+            _logger.LogInformation("Generating customers by country report for country {country}", countryName);
+
             CustomerByCountryGrid.DataSource = _customers.Where(customer => customer.Country == countryName).ToList();
         }
     }
